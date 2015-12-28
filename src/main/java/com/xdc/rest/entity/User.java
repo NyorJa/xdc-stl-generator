@@ -38,8 +38,8 @@ public class User implements Serializable {
 	}
 
 
-	@Temporal(TemporalType.DATE)
-	@Column(name="date_created", nullable=false)
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name="date_created", nullable=false, columnDefinition="DATETIME")
 	public Date getDateCreated() {
 		return this.dateCreated;
 	}
