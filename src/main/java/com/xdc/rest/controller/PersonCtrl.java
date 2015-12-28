@@ -1,12 +1,14 @@
 package com.xdc.rest.controller;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.xdc.rest.entity.Person;
 import com.xdc.rest.model.PersonInfo;
 import com.xdc.rest.model.StatusListInfo;
+import com.xdc.rest.model.StatusSingleInfo;
 import com.xdc.rest.security.RestCorsHttpServletResponse;
 import com.xdc.rest.service.PersonService;
 import com.xdc.rest.utils.SystemMessage;
@@ -40,10 +43,12 @@ public class PersonCtrl {
 			personInfo.setPersonId(person.getId());
 			personInfo.setFirstName(person.getFirstName());
 			personInfo.setLastName(person.getLastName());
+			personInfo.setAddress(person.getAddress());
 			personInfo.setDateCreated(person.getDateCreated());
 			personInfo.setDateModified(person.getDateModified());
 			
-			personInfos.addAll(personInfos);
+			personInfos.add(personInfo);
+			
 		}
 		
 		statusListInfo.setList(personInfos);
@@ -67,5 +72,27 @@ public class PersonCtrl {
 		statusListInfo.setTotal(personService.getTotal(request));
 		
 		return statusListInfo;
+	}
+	
+	@RequestMapping(value = "/person", method = RequestMethod.POST)
+	public StatusSingleInfo add(@RequestBody PersonInfo personInfo, HttpServletResponse  response){
+		RestCorsHttpServletResponse.setResponse(response);
+		StatusSingleInfo statusSingleInfo = new StatusSingleInfo();
+		
+		Person person = new Person();
+		
+		person.setAddress(personInfo.getAddress());
+		person.setFirstName(personInfo.getFirstName());
+		person.setLastName(personInfo.getLastName());
+		person.setAddress(personInfo.getAddress());
+		person.setDateCreated(new Date());
+		
+		person = personService.add(person);
+		
+		statusSingleInfo.setId(person.getId());
+		statusSingleInfo.setMessage(SystemMessage.SUCCESS);
+		statusSingleInfo.setStatus(true);
+		
+		return statusSingleInfo;
 	}
 }

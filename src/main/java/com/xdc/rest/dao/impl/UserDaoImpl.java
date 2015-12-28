@@ -115,4 +115,28 @@ public class UserDaoImpl implements UserDao {
 		return qryCondition;
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Object[]> getDefinedList(HttpServletRequest request) throws IllegalArgumentException {
+		String qryCondition = setQueryCondition(request);
+		String nativeQuery = "select "
+				+ " u.id as userId, "
+				+ " p.id as personId, "
+				+ " u.username,"
+				+ " u.password, "
+				+ " concat(p.first_name, ' ', p.last_name) as personName,"
+				+ " p.address, "
+				+ " u.date_created, "
+				+ " u.date_modified "
+				+ " from user u "
+				+ " inner join person p on p.id = u.person_id "
+				+ qryCondition
+				+ " order by u.id desc ";
+		
+		
+		Query query = entityManager.createNativeQuery(nativeQuery);
+		
+		return query.getResultList();
+	}
+
 }

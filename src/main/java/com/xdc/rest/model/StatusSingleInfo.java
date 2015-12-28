@@ -1,5 +1,8 @@
 package com.xdc.rest.model;
 
+/*
+ * @Author confidential company
+ */
 public class StatusSingleInfo {
 	private boolean status;
 	private String message;

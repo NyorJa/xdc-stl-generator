@@ -2,6 +2,9 @@ package com.xdc.rest.model;
 
 import java.util.List;
 
+/*
+ *@Author confidential company 
+ */
 public class StatusListInfo {
 	private boolean status;
 	private String message;
