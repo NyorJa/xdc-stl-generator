@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -94,5 +95,36 @@ public class PersonCtrl {
 		statusSingleInfo.setStatus(true);
 		
 		return statusSingleInfo;
+	}
+	
+	@RequestMapping(value = "/person/{id}", method = RequestMethod.GET, produces = "application/json")
+	public PersonInfo get(@PathVariable int id, HttpServletRequest request,
+			HttpServletResponse response){
+		RestCorsHttpServletResponse.setResponse(response);
+		
+		PersonInfo personInfo = new PersonInfo();
+		
+		Person person = personService.get(id);
+		
+		if (person != null) {
+			
+			personInfo.setPersonId(person.getId());
+			personInfo.setFirstName(person.getFirstName());
+			personInfo.setLastName(person.getLastName());
+			personInfo.setAddress(person.getAddress());
+			personInfo.setDateCreated(person.getDateCreated());
+			personInfo.setDateModified(person.getDateModified());
+		}
+		else
+		{
+			personInfo.setPersonId(0);
+			personInfo.setFirstName("Not Existing");
+			personInfo.setLastName("Not Existing");
+			personInfo.setAddress("Not Existing");
+			personInfo.setDateCreated(null);
+			personInfo.setDateModified(null);
+		}
+		
+		return personInfo;
 	}
 }
