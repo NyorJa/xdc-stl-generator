@@ -127,4 +127,26 @@ public class PersonCtrl {
 		
 		return personInfo;
 	}
+	
+	@RequestMapping(value = "/person/{id}", method = RequestMethod.PUT)
+	public StatusSingleInfo update(@PathVariable int id, @RequestBody PersonInfo personInfo, HttpServletResponse response){
+		RestCorsHttpServletResponse.setResponse(response);
+		StatusSingleInfo statusSingleInfo = new StatusSingleInfo();
+		
+		Person person = personService.get(id);
+		
+		person.setAddress(personInfo.getAddress());
+		person.setFirstName(personInfo.getFirstName());
+		person.setLastName(personInfo.getLastName());
+		person.setAddress(personInfo.getAddress());
+		person.setDateModified(null);
+		
+		person = personService.update(person);
+		
+		statusSingleInfo.setId(person.getId());
+		statusSingleInfo.setMessage(SystemMessage.SUCCESS);
+		statusSingleInfo.setStatus(true);
+		
+		return statusSingleInfo;
+	}
 }
