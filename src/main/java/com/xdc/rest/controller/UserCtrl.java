@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -106,6 +107,31 @@ public class UserCtrl {
 		statusSingleInfo.setStatus(true);
 		
 		return statusSingleInfo;
+	}
+	
+	@RequestMapping(value = "/user/{id}", method = RequestMethod.GET, produces = "application/json")
+	public UserInfo get(@PathVariable int id, HttpServletResponse response){
+		RestCorsHttpServletResponse.setResponse(response);
 		
+		User user = userService.get(id);
+		
+		UserInfo userInfo = new UserInfo();
+		
+		if (user != null) {
+			
+			userInfo.setUserId(user.getId());
+			
+			Person person = user.getPerson();
+			
+			userInfo.setPersonId(person.getId());
+			userInfo.setPersonName(person.getFirstName() + person.getLastName());
+			userInfo.setPersonAddress(person.getAddress());
+			
+			userInfo.setUsername(user.getUsername());
+			userInfo.setDateCreated(user.getDateCreated());
+			userInfo.setDateModified(user.getDateModified());
+		}
+		
+		return userInfo;
 	}
 }
