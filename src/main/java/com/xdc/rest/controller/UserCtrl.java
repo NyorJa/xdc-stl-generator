@@ -30,6 +30,12 @@ public class UserCtrl {
 	@Autowired
 	UserService userService;
 	
+	/**
+	 * 
+	 * @param request
+	 * @param response
+	 * @return statusListInfo
+	 */
 	@RequestMapping(value = "/user/list", method = RequestMethod.GET, produces = "application/json")
 	public StatusListInfo getAll(HttpServletRequest request, HttpServletResponse response){
 		RestCorsHttpServletResponse.setResponse(response);
