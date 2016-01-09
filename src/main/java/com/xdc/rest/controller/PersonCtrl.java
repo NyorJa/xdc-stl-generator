@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -88,6 +89,59 @@ public class PersonCtrl {
 		person.setDateCreated(new Date());
 		
 		person = personService.add(person);
+		
+		statusSingleInfo.setId(person.getId());
+		statusSingleInfo.setMessage(SystemMessage.SUCCESS);
+		statusSingleInfo.setStatus(true);
+		
+		return statusSingleInfo;
+	}
+	
+	@RequestMapping(value = "/person/{id}", method = RequestMethod.GET, produces = "application/json")
+	public PersonInfo get(@PathVariable int id, HttpServletRequest request,
+			HttpServletResponse response){
+		RestCorsHttpServletResponse.setResponse(response);
+		
+		PersonInfo personInfo = new PersonInfo();
+		
+		Person person = personService.get(id);
+		
+		if (person != null) {
+			
+			personInfo.setPersonId(person.getId());
+			personInfo.setFirstName(person.getFirstName());
+			personInfo.setLastName(person.getLastName());
+			personInfo.setAddress(person.getAddress());
+			personInfo.setDateCreated(person.getDateCreated());
+			personInfo.setDateModified(person.getDateModified());
+		}
+		else
+		{
+			personInfo.setPersonId(0);
+			personInfo.setFirstName("Not Existing");
+			personInfo.setLastName("Not Existing");
+			personInfo.setAddress("Not Existing");
+			personInfo.setDateCreated(null);
+			personInfo.setDateModified(null);
+		}
+		
+		return personInfo;
+	}
+	
+	@RequestMapping(value = "/person/{id}", method = RequestMethod.PUT)
+	public StatusSingleInfo update(@PathVariable int id, @RequestBody PersonInfo personInfo, HttpServletResponse response){
+		RestCorsHttpServletResponse.setResponse(response);
+		StatusSingleInfo statusSingleInfo = new StatusSingleInfo();
+		
+		Person person = personService.get(id);
+		
+		person.setAddress(personInfo.getAddress());
+		person.setFirstName(personInfo.getFirstName());
+		person.setLastName(personInfo.getLastName());
+		person.setAddress(personInfo.getAddress());
+		person.setDateModified(null);
+		
+		person = personService.update(person);
 		
 		statusSingleInfo.setId(person.getId());
 		statusSingleInfo.setMessage(SystemMessage.SUCCESS);
