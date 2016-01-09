@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -88,6 +89,27 @@ public class PersonCtrl {
 		person.setDateCreated(new Date());
 		
 		person = personService.add(person);
+		
+		statusSingleInfo.setId(person.getId());
+		statusSingleInfo.setMessage(SystemMessage.SUCCESS);
+		statusSingleInfo.setStatus(true);
+		
+		return statusSingleInfo;
+	}
+	
+	public StatusSingleInfo update(@PathVariable int id, @RequestBody PersonInfo personInfo,
+			HttpServletResponse response){
+		RestCorsHttpServletResponse.setResponse(response);
+		StatusSingleInfo statusSingleInfo = new StatusSingleInfo();
+		
+		Person person = personService.get(id);
+		
+		person.setAddress(personInfo.getAddress());
+		person.setDateModified(null);
+		person.setFirstName(personInfo.getFirstName());
+		person.setLastName(personInfo.getLastName());
+		
+		person = personService.update(person);
 		
 		statusSingleInfo.setId(person.getId());
 		statusSingleInfo.setMessage(SystemMessage.SUCCESS);
